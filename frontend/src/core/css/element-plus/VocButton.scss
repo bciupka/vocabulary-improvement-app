@@ -1,0 +1,17 @@
+.el-button {
+  width: 100%;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 0 $sizeS;
+  &--primary {
+    background-color: $color-primary-1;
+    border: 2px $border-primary-1 solid;
+  }
+  transition: 0.5s;
+  &:focus,
+  &:hover {
+    background-color: $color-white-1;
+    border: 2px $border-primary-1 solid;
+    color: $color-focus-1;
+  }
+}
