@@ -1,40 +1,30 @@
 <template>
   <section class="ExamView">
     <button @click="test1()">test</button>
+      <InlineMessage v-show="!showInlineMessage" :type="messageType" message="Please load vocabulary"/>
     <div class="ExamView__exam">
       <VocForm class="ExamView__form" :label-position="'top'">
         <VocRow :justify="'center'" :gutter="20">
-          <VocCol :span="3">
-            <VocFormItem label="Remove" style="font-size: 5px">
-              <VocButton>+</VocButton>
+          <VocCol :span="9">
+            <VocFormItem label="Correct answers">
+              <VocButton>{{ correctAnswers }}</VocButton>
             </VocFormItem>
           </VocCol>
           <VocCol :span="6">
             <VocFormItem label="WORD">
-                <VocInput v-model="wordToTranslate"></VocInput>
+                <VocInput v-model="wordToTranslate.word"></VocInput>
             </VocFormItem>
           </VocCol>
-          <VocCol :span="3">
-            <VocFormItem label="Add">
-              <VocButton>-</VocButton>
+          <VocCol :span="9">
+            <VocFormItem label="Wrong answers">
+              <VocButton>{{ wrongAnswers }}</VocButton>
             </VocFormItem>
           </VocCol>
         </VocRow>
-        <VocRow v-if="answers.length > 0" class="ExamView__row" :justify="'center'" :gutter="20">
-          <VocCol :span="6">
-            <VocButton>{{ answers[0] }}</VocButton>
-          </VocCol>
-          <VocCol :span="6">
-            <VocButton>{{ answers[1] }}</VocButton>
-          </VocCol>
-        </VocRow>
-        <VocRow v-if="answers.length > 0" class="ExamView__row" :justify="'center'" :gutter="20">
-          <VocCol :span="6">
-            <VocButton>{{ answers[2] }}</VocButton>
-          </VocCol>
-          <VocCol :span="6">
-            <VocButton>{{ answers[3] }}</VocButton>
-          </VocCol>
+        <VocRow v-if="showExam" class="ExamView__row" :justify="'center'" :gutter="20">
+            <VocCol class="ExamView__answers" :span="10" v-for="(item,index) in answers">
+                <VocButton @click="choosenAnswer(item)" :ref="index">{{ item }}</VocButton>
+            </VocCol>
         </VocRow>
       </VocForm>
     </div>
@@ -43,16 +33,34 @@
 
 <script setup lang="ts">
 import { VocButton, VocInput, VocForm, VocFormItem, VocRow, VocCol } from '@/core/element-plus'
-import { computed, ref } from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import { useVocabularyTestPageStore } from '@/components/store/vocabulary-test-page-store'
+import InlineMessage from "@/core/InlineMessage.vue";
+import type {VocabularyFileData} from "@/components/domain/vocabulary-file-data";
 
 const store = useVocabularyTestPageStore();
 const answers = ref([])
-const wordToTranslate = ref<String>();
+const wordToTranslate = ref<VocabularyFileData>({
+    word: "",
+    wordTranslation: [""],
+});
 const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+const messageType = computed( () => store.sortedFileData.length > 0 ? "success" : "error");
+const showInlineMessage = computed( () => !!store.sortedFileData.length > 0)
+const showExam = computed( () => answers.value.length > 0)
+const correctAnswers = computed( () => store.correctAnswers);
+const wrongAnswers = computed( () => store.wrongAnswers);
+const choosenAnswer = (answer: string) => {
+    if(answer === wordToTranslate.value?.wordTranslation[0]) {
+        store.correctAnswers++;
+    } else {
+        store.wrongAnswers++;
+    }
+    prepareSetOfAnswersAndWordToTranslate();
+}
 const getRandomNumberWithExcluded = (min, max, excludedNumbers: number[]) => {
     const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
     const isExcluded = excludedNumbers.includes(randomNumber);
@@ -63,49 +71,42 @@ const getRandomNumberWithExcluded = (min, max, excludedNumbers: number[]) => {
 }
 
 const test1 = () => {
-    //store.sortFileData();
-    /*const t = [0]
-    for(let i = 0 ; i < 3; i++) {
-        const a = getRandomNumberWithExcluded(0,3,t);
-        t.push(a);
-    }
-    console.log(t);
-     const q = getRandomNumberWithExcluded(0,3,[0]);
-     const qq = t[0];
-     t[0] = t[q];
-     t[q] = qq;
-     console.log(
-         t
-     )
-*/
-    getAnswer();
-    console.log(answers.value.length)
+    prepareSetOfAnswersAndWordToTranslate();
 }
-const loadFileMessage1 = ref<String>();
-const getAnswer = () => {
-  const wordsAmount = store.sortedFileData.length
-  const randomIndex = getRandomNumber(0, wordsAmount-1)
-  const drawnIndexes = [randomIndex];
-  console.log(store.sortedFileData[randomIndex])
-  const correctAnswer = store.sortedFileData[randomIndex].wordTranslation[0];
-  wordToTranslate.value = store.sortedFileData[randomIndex].word;
-  answers.value.push(correctAnswer);
 
-  for(let i = 0; i < 3; i++) {
-      const randomNumber = getRandomNumberWithExcluded(0, wordsAmount-1, drawnIndexes);
-      drawnIndexes.push(randomNumber);
-      const word = store.sortedFileData[randomNumber].wordTranslation[0];
-      answers.value.push(word);
+const prepareSetOfAnswersAndWordToTranslate = () => {
+  if(answers.value.length > 0) {
+      answers.value.length = 0;
+      const wordsAmount = store.sortedFileData.length
+      const randomIndex = getRandomNumber(0, wordsAmount - 1)
+      const drawnIndexes = [randomIndex];
+      const correctAnswer = store.sortedFileData[randomIndex].wordTranslation[0];
+      wordToTranslate.value = store.sortedFileData[randomIndex];
+      answers.value.push(correctAnswer);
+
+      while (answers.value.length < 4) {
+          const randomNumber = getRandomNumberWithExcluded(0, wordsAmount - 1, drawnIndexes);
+          drawnIndexes.push(randomNumber);
+          const word = store.sortedFileData[randomNumber].wordTranslation[0];
+          answers.value.push(word);
+      }
+      const randomIndexForShuffle = getRandomNumberWithExcluded(0, wordsAmount - 1, [0]);
+      answers.value = store.shuffleWords(answers.value, randomIndexForShuffle);
   }
-  const randomIndexForShuffle = getRandomNumberWithExcluded(0,wordsAmount-1,[0]);
-  answers.value = store.shuffleWords(answers.value, randomIndexForShuffle);
 }
+
+onMounted( () => {
+    prepareSetOfAnswersAndWordToTranslate();
+})
 </script>
 
 <style scoped lang="scss">
 .ExamView {
   &__row {
-    margin-bottom: $sizeM;
+    margin: $sizeM 0;
+  }
+  &__answers {
+    margin: $sizeM 0;
   }
 
   &__exam {
