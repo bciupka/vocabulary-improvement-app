@@ -1,6 +1,6 @@
 <template>
   <ElButton>
-    <slot />
+      <slot />
   </ElButton>
 </template>
 

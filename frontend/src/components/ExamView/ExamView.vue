@@ -3,7 +3,7 @@
     <button @click="test1()">test</button>
       <InlineMessage v-show="!showInlineMessage" :type="messageType" message="Please load vocabulary"/>
     <div class="ExamView__exam">
-      <VocForm class="ExamView__form" :label-position="'top'">
+<!--      <VocForm class="ExamView__form" :label-position="'top'">
         <VocRow :justify="'center'" :gutter="20">
           <VocCol :span="9">
             <VocFormItem label="Correct answers">
@@ -26,7 +26,12 @@
                 <VocButton @click="choosenAnswer(item)" :ref="index">{{ item }}</VocButton>
             </VocCol>
         </VocRow>
-      </VocForm>
+      </VocForm>-->
+        <VocInput style="width: 80%"></VocInput>
+        <VocButton type="danger">Tekst</VocButton>
+        <VocButton type="primary">Tekst</VocButton>
+        <VocButton type="warning">Tekst</VocButton>\
+        <VocButton type="success">Tekst</VocButton>
     </div>
   </section>
 </template>
@@ -37,7 +42,7 @@ import {computed, onMounted, ref} from 'vue'
 import { useVocabularyTestPageStore } from '@/components/store/vocabulary-test-page-store'
 import InlineMessage from "@/core/InlineMessage.vue";
 import type {VocabularyFileData} from "@/components/domain/vocabulary-file-data";
-
+const test =  { type: 'primary', text: 'primary' };
 const store = useVocabularyTestPageStore();
 const answers = ref([])
 const wordToTranslate = ref<VocabularyFileData>({
@@ -71,7 +76,10 @@ const getRandomNumberWithExcluded = (min, max, excludedNumbers: number[]) => {
 }
 
 const test1 = () => {
-    prepareSetOfAnswersAndWordToTranslate();
+    console.log("test")
+    const data = store.fetchVocabulary();
+    console.log("test1")
+    console.log(data)
 }
 
 const prepareSetOfAnswersAndWordToTranslate = () => {

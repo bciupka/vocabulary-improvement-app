@@ -3,15 +3,68 @@
   font-weight: bold;
   text-transform: uppercase;
   padding: 0 $sizeS;
+
+  @mixin buttonFocus($value){
+    background-color: $value;
+    border: 2px $color-white-1 solid;;
+    box-shadow: 0 0 0 2px $color-focus-1;
+  }
+
+  @mixin buttonHover($value){
+    background-color: $value;
+    font-size: 14px;
+  }
+
   &--primary {
     background-color: $color-primary-1;
     border: 2px $border-primary-1 solid;
+    &:focus {
+      @include buttonFocus($color-primary-1);
+    }
+    &:hover {
+      @include buttonHover($color-primary-1);
+    }
   }
+
+  &--danger {
+    background-color: $color-error-1;
+    border: 2px $border-primary-1 solid;
+    &:focus {
+      @include buttonFocus($color-error-1);
+    }
+    &:hover {
+      @include buttonHover($color-error-1);
+    }
+  }
+
+  &--warning {
+    background-color: $color-warning-1;
+    border: 2px $border-primary-1 solid;
+    &:focus {
+      @include buttonFocus($color-warning-1);
+    }
+    &:hover {
+      @include buttonHover($color-warning-1);
+    }
+  }
+
+  &--success {
+    background-color: $succesMain;
+    border: 2px $border-primary-1 solid;
+    &:focus {
+      @include buttonFocus($succesMain);
+    }
+    &:hover {
+      @include buttonHover($succesMain);
+    }
+  }
+
   transition: 0.5s;
-  &:focus,
+/*  &:focus,
   &:hover {
     background-color: $color-white-1;
     border: 2px $border-primary-1 solid;
     color: $color-focus-1;
-  }
+  }*/
+
 }

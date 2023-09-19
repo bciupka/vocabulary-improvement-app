@@ -48,14 +48,14 @@ export const useVocabularyTestPageStore = defineStore('vocabulary', () => {
   }
 
   const fetchVocabulary = () => {
-    axios
-        .get('https://jsonplaceholder.typicode.com/posts/1')
+    axios.get('http://127.0.0.1:8000/api/vocabuser')
         .then((response) => {
-         console.log();
+         console.log(response);
         })
   }
 
   return {
+    fetchVocabulary,
     wrongAnswers,
     correctAnswers,
     shuffleWords,
