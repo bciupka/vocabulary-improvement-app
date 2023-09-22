@@ -12,6 +12,7 @@
 
   @mixin buttonHover($value){
     background-color: $value;
+    border: 2px $color-white-1 solid;;
     font-size: 14px;
   }
 
