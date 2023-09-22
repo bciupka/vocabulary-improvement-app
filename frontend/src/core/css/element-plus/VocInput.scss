@@ -1,12 +1,12 @@
 .el-input {
-  &__innter {
-    color: red;
+  &__inner {
   }
 
   &__wrapper {
     &:hover {
       box-shadow: 0 0 0 1px $color-primary-1;
     }
+
     &.is-focus {
       box-shadow: 0 0 0 2px $color-focus-1;
     }
