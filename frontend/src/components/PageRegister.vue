@@ -1,34 +1,30 @@
 <template>
     <section class="PageLogin">
         <VocForm class="PageLogin__loginBox" label-position="top">
-            <VocFormItem label="email / login" >
+            <VocAlert class="VocAlert" message="tesashjkfjkasfjasjkfasjkfasjfhasjkfhasjkhfjaskhfjkasfjhasjkfhasjkhfsjkahfjkashfjkashfhasjkfhjkashfkaskjfhasjkhfjkasfhsjkahfjkt" :closable="true" type="success" title="test"/>
+            <VocAlert message="tesashjkfjkasfjasjkfasjkfasjfhasjkfhasjkhfjaskhfjkasfjhasjkfhasjkhfsjkahfjkashfjkashfhasjkfhjkashfkaskjfhasjkhfjkasfhsjkahfjkt" :closable="true" type="success" title="test" :show-icon="false"/>
+
+            <VocFormItem label="login" >
                 <VocInput v-model="formRegisterAccessibility.login"></VocInput>
             </VocFormItem>
-            <VocFormItem label="password" >
+            <VocFormItem label="email" >
                 <VocInput v-model="formRegisterAccessibility.email"></VocInput>
             </VocFormItem>
-            <VocFormItem label="email / login" >
-                <VocInput v-model="formRegisterAccessibility.name"></VocInput>
-            </VocFormItem>
             <VocFormItem label="password" >
-                <VocInput v-model="formRegisterAccessibility.surname"></VocInput>
-            </VocFormItem>
-            <VocFormItem label="email / login" >
                 <VocInput v-model="formRegisterAccessibility.password"></VocInput>
             </VocFormItem>
-            <VocFormItem label="password" >
+            <VocFormItem label="repeat password" >
                 <VocInput v-model="formRegisterAccessibility.repeatedPassword"></VocInput>
             </VocFormItem>
-
             <VocFormItem>
-                <VocButton type="primary" class="PageLogin__loginButton" @click="loginEmail">Login</VocButton>
+                <VocButton type="primary" class="PageLogin__loginButton" @click="register">Login</VocButton>
             </VocFormItem>
         </VocForm>
     </section>
 </template>
 
 <script lang="ts" setup>
-import { VocForm, VocFormItem, VocInput } from "@/core/element-plus/index";
+import { VocForm, VocFormItem, VocInput, VocAlert } from "@/core/element-plus/index";
 import { reactive, ref} from "vue";
 import VocButton from "@/core/element-plus/VocButton.vue";
 import {usePageLoginStore} from "@/components/page-login-store";
@@ -39,13 +35,21 @@ const loginEmail = () => {
   //  store.login(formRegisterAccessibility.loginEmail, formRegisterAccessibility.password);
 }
 
+const register = () => {
+    if(formRegisterAccessibility.password === formRegisterAccessibility.repeatedPassword) {
+        const registerForm: RegisterForm = {
+            email: formRegisterAccessibility.email,
+            login: formRegisterAccessibility.login,
+            password: formRegisterAccessibility.password,
+        }
+        store.register(registerForm);
+    }
+}
 const formRegisterAccessibility = reactive({
     email: '',
     login:'',
     password: '',
     repeatedPassword:'',
-    name:'',
-    surname:''
 })
 </script>
 

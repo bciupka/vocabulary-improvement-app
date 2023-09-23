@@ -1,0 +1,49 @@
+.el-alert {
+
+  &:not(.VocAlert) {
+   .el-alert__content {
+     inline-size: 100%;
+     overflow-wrap: break-word;
+   }
+  }
+  &__content {
+    inline-size: 80%;
+    overflow-wrap: break-word;
+  }
+
+  &--info {
+    &.is-light {
+      @include font--copy1;
+      color: $color-primary-1;
+      .el-alert__description {
+        color: $color-primary-1;
+      }
+
+    }
+  }
+ &--error {
+   &.is-light {
+     @include font--copy1;
+     color: $color-error-1;
+
+   }
+ }
+
+  &--succes {
+
+    &.is-light {
+      @include font--copy1;
+      color: $succesMain;
+
+    }
+  }
+
+  &--warning {
+    &.is-light {
+      @include font--copy1;
+      color: $color-warning-1;
+
+    }
+  }
+
+}

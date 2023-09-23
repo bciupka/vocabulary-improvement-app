@@ -13,7 +13,16 @@ export const usePageLoginStore = defineStore('login', () => {
             })*/
     }
 
+    const register = (registerForm: RegisterForm) => {
+      console.log(registerForm)
+        /*axios.post("enpoint", { registerForm })
+           .then((response) => {
+               console.log(response);
+           })*/
+    }
+
     return {
-        login
+        login,
+        register
     }
 })
