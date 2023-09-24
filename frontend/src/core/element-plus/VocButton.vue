@@ -1,11 +1,15 @@
 <template>
   <ElButton>
-    <slot />
+      <slot />
   </ElButton>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ElButton } from 'element-plus'
+import { computed } from "vue";
+
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

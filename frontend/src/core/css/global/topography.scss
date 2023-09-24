@@ -4,3 +4,11 @@
   line-height: 1.25;
   font-family: 'Open Sans', sans-serif;
 }
+
+@mixin font--copy2() {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  font-family: 'Open Sans', sans-serif;
+}
+

@@ -8,8 +8,7 @@
     >
       <VocButton type="primary">Click to upload</VocButton>
     </VocUpload>
-    <InlineMessage v-show="showInlineMessage" :type="messageType" />
-    <div v-show="showInlineMessage">{{ message }}</div>
+    <InlineMessage v-show="showInlineMessage" :type="messageType" :message="message"/>
   </section>
 </template>
 <script lang="ts" setup>
