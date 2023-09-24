@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import VocabUser, Polish
+from .models import Language, Word, Link
 
 
-admin.site.register(VocabUser)
-admin.site.register(Polish)
+admin.site.register(Language)
+admin.site.register(Word)
+admin.site.register(Link)
