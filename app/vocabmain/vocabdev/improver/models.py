@@ -31,4 +31,3 @@ class Link(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.base} {self.translation.language.symbol}'
-

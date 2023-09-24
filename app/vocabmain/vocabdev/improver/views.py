@@ -30,4 +30,3 @@ class LinkViewSet(viewsets.ModelViewSet):
 @api_view(['GET'])
 def test_endpoint(request):
     return Response({'message': 'test'})
-

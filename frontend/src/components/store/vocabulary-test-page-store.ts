@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
-
-type VocabularyFileData = {
-  word: string
-  wordTranslation: string[]
-}
+import { ref } from 'vue'
+import axios from "axios";
+import type {VocabularyFileData} from "@/components/domain/vocabulary-file-data";
 
 export const useVocabularyTestPageStore = defineStore('vocabulary', () => {
   const fileData = ref<String>()
   const sortedFileData = ref<VocabularyFileData[]>([])
   const isLoadedNewValue = ref(false)
   const loadFileMessage = ref<String>()
+  //For now here, later in database
+  const correctAnswers = ref<number>(0)
+  //For now here, later in database
+  const wrongAnswers = ref<number>(0)
   const isLoadedCorrectly = (data: string | undefined) => {
     if (data !== fileData.value) {
       isLoadedNewValue.value = true
@@ -46,7 +47,17 @@ export const useVocabularyTestPageStore = defineStore('vocabulary', () => {
     return words;
   }
 
+  const fetchVocabulary = () => {
+    axios.get('http://127.0.0.1:8000/api/vocabuser')
+        .then((response) => {
+         console.log(response);
+        })
+  }
+
   return {
+    fetchVocabulary,
+    wrongAnswers,
+    correctAnswers,
     shuffleWords,
     loadFileMessage,
     isLoadedNewValue,
