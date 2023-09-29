@@ -2,10 +2,11 @@
 
   &:not(.VocAlert) {
    .el-alert__content {
-     inline-size: 100%;
+     inline-size: 95%;
      overflow-wrap: break-word;
    }
   }
+
   &__content {
     inline-size: 80%;
     overflow-wrap: break-word;
@@ -21,6 +22,7 @@
 
     }
   }
+
  &--error {
    &.is-light {
      @include font--copy1;
@@ -30,7 +32,6 @@
  }
 
   &--succes {
-
     &.is-light {
       @include font--copy1;
       color: $succesMain;

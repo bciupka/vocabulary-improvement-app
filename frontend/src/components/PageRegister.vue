@@ -1,9 +1,6 @@
 <template>
     <section class="PageLogin">
         <VocForm class="PageLogin__loginBox" label-position="top">
-            <VocAlert class="VocAlert" message="tesashjkfjkasfjasjkfasjkfasjfhasjkfhasjkhfjaskhfjkasfjhasjkfhasjkhfsjkahfjkashfjkashfhasjkfhjkashfkaskjfhasjkhfjkasfhsjkahfjkt" :closable="true" type="success" title="test"/>
-            <VocAlert message="tesashjkfjkasfjasjkfasjkfasjfhasjkfhasjkhfjaskhfjkasfjhasjkfhasjkhfsjkahfjkashfjkashfhasjkfhjkashfkaskjfhasjkhfjkasfhsjkahfjkt" :closable="true" type="success" title="test" :show-icon="false"/>
-
             <VocFormItem label="login" >
                 <VocInput v-model="formRegisterAccessibility.login"></VocInput>
             </VocFormItem>
@@ -28,14 +25,20 @@ import { VocForm, VocFormItem, VocInput, VocAlert } from "@/core/element-plus/in
 import { reactive, ref} from "vue";
 import VocButton from "@/core/element-plus/VocButton.vue";
 import {usePageLoginStore} from "@/components/page-login-store";
+import {useVocabularyTestPageStore} from "@/components/store/vocabulary-test-page-store";
+
+import {useRouter} from "vue-router";
 
 const loginName = ref('')
 const store = usePageLoginStore();
+const testStore = useVocabularyTestPageStore();
 const loginEmail = () => {
   //  store.login(formRegisterAccessibility.loginEmail, formRegisterAccessibility.password);
 }
-
+const router = useRouter()
 const register = () => {
+    testStore.testAuth = true;
+    router.push('/')
     if(formRegisterAccessibility.password === formRegisterAccessibility.repeatedPassword) {
         const registerForm: RegisterForm = {
             email: formRegisterAccessibility.email,
@@ -43,6 +46,8 @@ const register = () => {
             password: formRegisterAccessibility.password,
         }
         store.register(registerForm);
+    } else {
+
     }
 }
 const formRegisterAccessibility = reactive({
@@ -62,7 +67,7 @@ const formRegisterAccessibility = reactive({
   &__loginBox {
     background: $color-background;
     width: 300px;
-    height: 500px;
+    height: 350px;
     padding: 50px;
     border-radius: $sizeS;
   }

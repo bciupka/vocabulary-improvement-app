@@ -1,5 +1,5 @@
 <template>
-    <ElAlert  :type="type!" :show-icon="showIcon!" :closable="closable!" :title="titleMessage" :description="message">
+    <ElAlert :class="styleClass" :type="type!" :show-icon="showIcon!" :closable="closable!" :title="titleMessage" :description="message">
         <slot />
     </ElAlert>
 </template>
@@ -26,10 +26,14 @@ const titleMessage = computed( () => {
         return `${props.type} alert`;
     }
 })
+
+const styleClass = computed( () => ({
+    "VocAlert": props.showIcon
+}))
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .VocAlert {
-
+   margin-bottom: 10px;
 }
 </style>
