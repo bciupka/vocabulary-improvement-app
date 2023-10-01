@@ -5,6 +5,8 @@ export {
   ElRow as VocRow,
   ElInput as VocInput,
   ElUpload as VocUpload,
+    ElRadioGroup as VocRadioGroup,
+    ElRadio as VocRadio
 } from 'element-plus'
 
 export { default as VocButton } from './VocButton.vue'

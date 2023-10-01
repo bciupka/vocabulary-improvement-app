@@ -8,14 +8,15 @@ import { createRouter, createWebHistory } from 'vue-router'
 import {useAuthenticationStore} from "@/core/store/authentication-store";
 
 function main() {
-  const store = useAuthenticationStore();
   const router = createRouter({
     history: createWebHistory(),
     routes: routes
   })
   const app = createApp(App)
   app.use(createPinia()).use(router)
-  if(store.auth) {
+  const store = useAuthenticationStore();
+  console.log(store.auth)
+  if(!store.auth) {
     router.push('/login')
   }
 
