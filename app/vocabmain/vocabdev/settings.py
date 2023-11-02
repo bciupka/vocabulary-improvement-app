@@ -40,7 +40,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     'vocabdev.improver',
+    'vocabdev.account',
 ]
+
+AUTH_USER_MODEL = 'account.ImpUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -126,10 +129,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.SessionAuthentication',]
 }
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Vocabulary Improvement Application PL',
     'SCHEMA_PATH_PREFIX': '/api'
 }
+
+# CSRF_COOKIE_HTTPONLY = True
