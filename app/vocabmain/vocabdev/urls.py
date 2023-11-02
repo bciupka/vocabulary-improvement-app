@@ -3,6 +3,7 @@ from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 from .improver import views
+from .account import views as user_views
 
 
 router = routers.DefaultRouter()
@@ -17,4 +18,5 @@ urlpatterns = [
     path('api/eptest/', SpectacularSwaggerView.as_view(url_name='schema')),
     path('api/testme', views.test_endpoint),
     path('api/', include(router.urls)),
+    path('api/user/register', user_views.ImpUserRegisterView.as_view(), name='user_register')
     ]

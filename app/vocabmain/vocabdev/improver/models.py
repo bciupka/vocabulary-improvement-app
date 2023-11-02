@@ -1,12 +1,13 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from django.conf import settings
 
 
 class Language(models.Model):
     language_pol = models.CharField(max_length=100, unique=True)
     language_eng = models.CharField(max_length=100, unique=True)
-    symbol = models.CharField(max_length=3, unique=True)
+    symbol = models.SlugField(max_length=3, unique=True)
 
     def __str__(self):
         return f'{self.language_eng} language'
@@ -25,7 +26,7 @@ class Word(models.Model):
 
 
 class Link(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     base = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='base')
     translation = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='transation')
 
