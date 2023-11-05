@@ -4,6 +4,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 from .improver import views
 from .account import views as user_views
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 
 router = routers.DefaultRouter()
@@ -18,5 +19,7 @@ urlpatterns = [
     path('api/eptest/', SpectacularSwaggerView.as_view(url_name='schema')),
     path('api/testme', views.test_endpoint),
     path('api/', include(router.urls)),
-    path('api/user/register', user_views.ImpUserRegisterView.as_view(), name='user_register')
+    path('api/user/register', user_views.ImpUserRegisterView.as_view(), name='user_register'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     ]
