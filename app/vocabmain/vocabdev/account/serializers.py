@@ -33,7 +33,7 @@ class ImpUserRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # language = get_object_or_404(Language, symbol=validated_data['fav_language'])\
         #     if validated_data.get('fav_language') else None
-        about = validated_data['about'] if validated_data.get('about', None) else None
+        # about = validated_data['about'] if validated_data.get('about', None) else None
         user = ImpUser.objects.create_user(username=validated_data['username'], email=validated_data['email'],
                                            password=validated_data['password'], first_name=validated_data['first_name'],
                                            last_name=validated_data['last_name'],

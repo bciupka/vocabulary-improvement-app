@@ -50,7 +50,7 @@ class ImpUser(AbstractBaseUser, PermissionsMixin):
     fav_language = models.ForeignKey(Language, on_delete=models.SET_NULL, blank=True, null=True)
     about = models.TextField(_('about section'), max_length=800, blank=True, null=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     objects = ImpUserManager()
 
