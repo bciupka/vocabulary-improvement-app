@@ -6,6 +6,7 @@ from .models import ImpUser
 from ..improver.models import Language
 # from rest_framework.generics import get_object_or_404
 from ..improver.serializers import LanguageSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class ImpUserRegisterSerializer(serializers.ModelSerializer):
@@ -40,3 +41,14 @@ class ImpUserRegisterSerializer(serializers.ModelSerializer):
                                            about=validated_data.get('about'))
         user.save()
         return user
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token['username'] = user.username
+        token['email'] = user.email
+
+        return token
