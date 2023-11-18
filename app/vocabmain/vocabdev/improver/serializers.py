@@ -1,14 +1,26 @@
-from .models import VocabUser, Polish
+from .models import Language, Word, Link
 from rest_framework import serializers
 
 
-class VocabUserSerializer(serializers.ModelSerializer):
+class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VocabUser
-        fields = ['name']
+        model = Language
+        fields = '__all__'
 
 
-class PolishSerializer(serializers.ModelSerializer):
+class WordSerializer(serializers.ModelSerializer):
+    language = LanguageSerializer()
+
     class Meta:
-        model = Polish
-        fields = ['word']
+        model = Word
+        fields = '__all__'
+
+
+class LinkSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.username')
+    base = WordSerializer()
+    translation = WordSerializer()
+
+    class Meta:
+        model = Link
+        fields = '__all__'
