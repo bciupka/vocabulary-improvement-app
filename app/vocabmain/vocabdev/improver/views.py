@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,26 +5,27 @@ from .serializers import LanguageSerializer, WordSerializer, LinkSerializer
 from .models import Language, Word, Link
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
+from rest_framework.permissions import IsAuthenticated
 
 
-class LanguageViewSet(viewsets.ModelViewSet):
+class LanguageViewSet(viewsets.ViewSet):
 
     queryset = Language.objects.all()
-    serializer_class = LanguageSerializer
     lookup_field = 'symbol'
 
 
-class WordViewSet(viewsets.ModelViewSet):
+class WordViewSet(viewsets.ViewSet):
 
     queryset = Word.objects.all()
-    serializer_class = WordSerializer
-    lookup_field = 'word'
+
+    def list(self, request):
+        serialzier = WordSerializer(self.queryset, many=True)
+        return Response(serialzier.data)
 
 
-class LinkViewSet(viewsets.ModelViewSet):
+class LinkViewSet(viewsets.ViewSet):
 
     queryset = Link.objects.all()
-    serializer_class = LinkSerializer
 
 
 def test_endpoint(request):

@@ -14,7 +14,7 @@ class Language(models.Model):
 
 
 class Word(models.Model):
-    word = models.CharField(max_length=255, unique=True)
+    word = models.CharField(max_length=255)
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
 
     def __str__(self):
