@@ -9,7 +9,7 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 
 class WordSerializer(serializers.ModelSerializer):
-    language = LanguageSerializer()
+    language = serializers.CharField(source='language.language_eng')
 
     class Meta:
         model = Word
