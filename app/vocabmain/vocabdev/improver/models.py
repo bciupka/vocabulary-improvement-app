@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
 from django.conf import settings
 
 
@@ -22,7 +21,13 @@ class Word(models.Model):
 
     def clean(self):
         if not self.word.islower():
-            raise ValidationError("Only lowercase allowed")
+            raise ValidationError({'word': 'Only lowercase allowed'})
+        if Word.objects.filter(language=self.language, word=self.word).exists():
+            raise ValidationError({'word': 'Duplicated word for language'})
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
 
 class Link(models.Model):
@@ -32,4 +37,3 @@ class Link(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.base} {self.translation.language.symbol}'
-

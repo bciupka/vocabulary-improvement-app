@@ -39,7 +39,6 @@ class ImpUserRegisterSerializer(serializers.ModelSerializer):
                                            last_name=validated_data['last_name'],
                                            fav_language=validated_data.get('fav_language_slug'),
                                            about=validated_data.get('about'))
-        user.save()
         return user
 
 

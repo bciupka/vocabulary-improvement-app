@@ -1,5 +1,6 @@
 from .models import Language, Word, Link
 from rest_framework import serializers
+from django.core.exceptions import ValidationError
 
 
 class LanguageSerializer(serializers.ModelSerializer):
@@ -9,7 +10,14 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 
 class WordSerializer(serializers.ModelSerializer):
-    language = serializers.CharField(source='language.language_eng')
+    language = serializers.SlugRelatedField(queryset=Language.objects.all(), slug_field='symbol')
+
+    def validate(self, attrs):
+        if not attrs['word'].islower():
+            raise ValidationError({'word': 'Only lowercase for word'})
+        elif len(attrs) > 2:
+            raise ValidationError({'lenght': 'Only 2 fields required'})
+        return attrs
 
     class Meta:
         model = Word
