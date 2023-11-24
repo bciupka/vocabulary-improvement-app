@@ -13,11 +13,14 @@ class WordSerializer(serializers.ModelSerializer):
     language = serializers.SlugRelatedField(queryset=Language.objects.all(), slug_field='symbol')
 
     def validate(self, attrs):
-        if not attrs['word'].islower():
-            raise ValidationError({'word': 'Only lowercase for word'})
-        elif len(attrs) > 2:
-            raise ValidationError({'lenght': 'Only 2 fields required'})
+        if Word.objects.filter(language=attrs['language'], word=attrs['word'].lower()).exists():
+            raise ValidationError({'word': 'Duplicate for language'})
         return attrs
+
+    def create(self, validated_data):
+        if not validated_data['word'].islower():
+            validated_data['word'] = validated_data['word'].lower()
+        return super().create(validated_data)
 
     class Meta:
         model = Word

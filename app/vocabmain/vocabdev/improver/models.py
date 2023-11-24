@@ -25,10 +25,6 @@ class Word(models.Model):
         if Word.objects.filter(language=self.language, word=self.word).exists():
             raise ValidationError({'word': 'Duplicated word for language'})
 
-    def save(self, *args, **kwargs):
-        self.clean()
-        super().save(*args, **kwargs)
-
 
 class Link(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
