@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
+from django.core.exceptions import ValidationError
 
 
 class LanguageViewSet(viewsets.ViewSet):
@@ -42,8 +43,11 @@ class WordViewSet(viewsets.ViewSet):
     def create(self, request):
         seriailzier = WordSerializer(data=request.data)
         if seriailzier.is_valid():
-            seriailzier.save()
-            return Response(seriailzier.data, status=status.HTTP_201_CREATED)
+            try:
+                seriailzier.save()
+                return Response(seriailzier.data, status=status.HTTP_201_CREATED)
+            except ValidationError as e:
+                return Response(dict(e), status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(seriailzier.errors, status=status.HTTP_400_BAD_REQUEST)
 

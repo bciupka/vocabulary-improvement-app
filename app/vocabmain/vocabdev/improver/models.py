@@ -21,15 +21,24 @@ class Word(models.Model):
 
     def clean(self):
         if not self.word.islower():
-            raise ValidationError({'word': 'Only lowercase allowed'})
+            self.word = self.word.lower()
         if Word.objects.filter(language=self.language, word=self.word).exists():
             raise ValidationError({'word': 'Duplicated word for language'})
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
 
 class Link(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     base = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='base')
     translation = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='transation')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=('user', 'base', 'translation'), name='link_uniqueness')
+        ]
 
     def __str__(self):
         return f'{self.user.username} - {self.base} {self.translation.language.symbol}'
