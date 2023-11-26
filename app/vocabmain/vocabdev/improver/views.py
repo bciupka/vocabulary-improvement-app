@@ -54,13 +54,3 @@ class WordViewSet(viewsets.ViewSet):
 
 class LinkViewSet(viewsets.ViewSet):
     queryset = Link.objects.all()
-
-
-def test_endpoint(request):
-    message = 'test'
-    return JsonResponse(message, safe=False)
-    # return JsonResponse({'message': 'test'})
-
-# @api_view(['GET'])
-# def test_endpoint(request):
-#     return Response({'message': 'test'})

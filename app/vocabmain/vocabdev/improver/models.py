@@ -3,7 +3,16 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 
 
-class Language(models.Model):
+class SelfValidatingModel(models.Model):
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
+
+class Language(SelfValidatingModel):
     language_pol = models.CharField(max_length=100, unique=True)
     language_eng = models.CharField(max_length=100, unique=True)
     symbol = models.SlugField(max_length=3, unique=True)
@@ -12,7 +21,7 @@ class Language(models.Model):
         return f'{self.language_eng} language'
 
 
-class Word(models.Model):
+class Word(SelfValidatingModel):
     word = models.CharField(max_length=255)
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
 
@@ -25,12 +34,8 @@ class Word(models.Model):
         if Word.objects.filter(language=self.language, word=self.word).exists():
             raise ValidationError({'word': 'Duplicated word for language'})
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
 
-
-class Link(models.Model):
+class Link(SelfValidatingModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     base = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='base')
     translation = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='transation')
