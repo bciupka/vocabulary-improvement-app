@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
 
 class LanguageViewSet(viewsets.ViewSet):
@@ -41,16 +41,28 @@ class WordViewSet(viewsets.ViewSet):
 
     @extend_schema(responses=WordSerializer, request=WordSerializer)
     def create(self, request):
-        seriailzier = WordSerializer(data=request.data)
-        if seriailzier.is_valid():
-            try:
-                seriailzier.save()
-                return Response(seriailzier.data, status=status.HTTP_201_CREATED)
-            except ValidationError as e:
-                return Response(dict(e), status=status.HTTP_400_BAD_REQUEST)
+        serializier = WordSerializer(data=request.data)
+        if serializier.is_valid():
+            serializier.save()
+            return Response(serializier.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(seriailzier.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializier.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LinkViewSet(viewsets.ViewSet):
     queryset = Link.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+    @extend_schema(responses=LinkSerializer)
+    def list(self, request):
+        serializer = LinkSerializer(self.queryset, many=True)
+        return Response(serializer.data)
+
+    @extend_schema(responses=LinkSerializer, request=LinkSerializer)
+    def create(self, request):
+        serializer = LinkSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

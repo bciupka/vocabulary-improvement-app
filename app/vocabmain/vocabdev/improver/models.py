@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.core.validators import RegexValidator
 
 
 class SelfValidatingModel(models.Model):
@@ -10,6 +11,12 @@ class SelfValidatingModel(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
+
+
+class WordManager(models.Manager):
+    def get_queryset(self):
+        self.word = self.word.islower()
+        return
 
 
 class Language(SelfValidatingModel):
@@ -22,8 +29,15 @@ class Language(SelfValidatingModel):
 
 
 class Word(SelfValidatingModel):
-    word = models.CharField(max_length=255)
+    WordValidator = RegexValidator(r'^[a-zA-Z]*$','Only letters allowed')
+
+    word = models.CharField(max_length=255, validators=[WordValidator])
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=('word', 'language'), name='word_uniqueness')
+        ]
 
     def __str__(self):
         return f'{self.word}'
@@ -31,8 +45,6 @@ class Word(SelfValidatingModel):
     def clean(self):
         if not self.word.islower():
             self.word = self.word.lower()
-        if Word.objects.filter(language=self.language, word=self.word).exists():
-            raise ValidationError({'word': 'Duplicated word for language'})
 
 
 class Link(SelfValidatingModel):
@@ -47,3 +59,7 @@ class Link(SelfValidatingModel):
 
     def __str__(self):
         return f'{self.user.username} - {self.base} {self.translation.language.symbol}'
+
+    def clean(self):
+        if self.base.language == self.translation.language:
+            raise ValidationError({'link': 'Same language in both words'})
