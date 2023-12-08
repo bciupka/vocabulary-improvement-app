@@ -16,7 +16,6 @@ class ImpUserRegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
     fav_language_slug = serializers.SlugRelatedField(queryset=Language.objects.all(), slug_field='symbol',
                                                      write_only=True,allow_null=True, required=False)
-    # fav_language = serializers.CharField(validators=[validate_slug], allow_blank=True, required=False)
     fav_language = LanguageSerializer(required=False, read_only=True)
 
     class Meta:
@@ -31,15 +30,11 @@ class ImpUserRegisterSerializer(serializers.ModelSerializer):
             return attrs
 
     def create(self, validated_data):
-        # language = get_object_or_404(Language, symbol=validated_data['fav_language'])\
-        #     if validated_data.get('fav_language') else None
-        about = validated_data['about'] if validated_data.get('about', None) else None
         user = ImpUser.objects.create_user(username=validated_data['username'], email=validated_data['email'],
                                            password=validated_data['password'], first_name=validated_data['first_name'],
                                            last_name=validated_data['last_name'],
                                            fav_language=validated_data.get('fav_language_slug'),
                                            about=validated_data.get('about'))
-        user.save()
         return user
 
 

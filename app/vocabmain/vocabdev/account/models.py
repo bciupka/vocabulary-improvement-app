@@ -32,16 +32,6 @@ class ImpUserManager(BaseUserManager):
 
 
 class ImpUser(AbstractBaseUser, PermissionsMixin):
-
-    def save(self, *args, **kwargs):
-        if not self.fav_language:
-            try:
-                language = Language.objects.get(symbol='eng')
-            except Language.DoesNotExist:
-                language = None
-            self.fav_language = language
-        super().save(*args, **kwargs)
-
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(_('email address'), max_length=150, unique=True)
     first_name = models.CharField(_('first name'), max_length=150, blank=True, null=True)
@@ -50,7 +40,7 @@ class ImpUser(AbstractBaseUser, PermissionsMixin):
     fav_language = models.ForeignKey(Language, on_delete=models.SET_NULL, blank=True, null=True)
     about = models.TextField(_('about section'), max_length=800, blank=True, null=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     objects = ImpUserManager()
 
@@ -60,3 +50,12 @@ class ImpUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'{self.username}'
+
+    def save(self, *args, **kwargs):
+        if not self.fav_language:
+            try:
+                language = Language.objects.get(symbol='eng')
+            except Language.DoesNotExist:
+                language = None
+            self.fav_language = language
+        super().save(*args, **kwargs)
