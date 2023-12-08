@@ -3,8 +3,9 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import 'element-plus/dist/index.css'
 import '@/core/css/import.scss'
-import { routes } from './route/router'
+import { routes} from './route/router'
 import { createRouter, createWebHistory } from 'vue-router'
+import {useAuthenticationStore} from "@/core/store/authentication-store";
 
 function main() {
   const router = createRouter({
@@ -12,8 +13,14 @@ function main() {
     routes: routes
   })
   const app = createApp(App)
-
   app.use(createPinia()).use(router)
+  const store = useAuthenticationStore()
+  console.log(store.auth)
+  console.log("test")
+  /*  if(!store.auth) {
+    router.push('/login')
+  }*/
+
   app.mount('#app')
 }
 

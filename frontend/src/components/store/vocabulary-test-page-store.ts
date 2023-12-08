@@ -4,6 +4,7 @@ import axios from "axios";
 import type {VocabularyFileData} from "@/components/domain/vocabulary-file-data";
 
 export const useVocabularyTestPageStore = defineStore('vocabulary', () => {
+  const testAuth = ref(true);
   const fileData = ref<String>()
   const sortedFileData = ref<VocabularyFileData[]>([])
   const isLoadedNewValue = ref(false)
@@ -55,6 +56,7 @@ export const useVocabularyTestPageStore = defineStore('vocabulary', () => {
   }
 
   return {
+    testAuth,
     fetchVocabulary,
     wrongAnswers,
     correctAnswers,

@@ -1,5 +1,5 @@
 @mixin font--copy1() {
-  font-size: 13px;
+  font-size: 13px !important;
   font-weight: 500;
   line-height: 1.25;
   font-family: 'Open Sans', sans-serif;
