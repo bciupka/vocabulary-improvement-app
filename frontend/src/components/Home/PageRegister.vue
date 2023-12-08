@@ -63,6 +63,7 @@ const formRegisterAccessibility = reactive({
   display: flex;
   justify-content: center;
   align-items: center;
+  border: solid 5px  black;
 
   &__loginBox {
     background: $color-background;

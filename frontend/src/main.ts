@@ -14,11 +14,12 @@ function main() {
   })
   const app = createApp(App)
   app.use(createPinia()).use(router)
-  const store = useAuthenticationStore();
+  const store = useAuthenticationStore()
   console.log(store.auth)
-  if(!store.auth) {
+  console.log("test")
+  /*  if(!store.auth) {
     router.push('/login')
-  }
+  }*/
 
   app.mount('#app')
 }
