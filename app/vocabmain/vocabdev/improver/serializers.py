@@ -30,10 +30,10 @@ class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Link
         fields = '__all__'
-        validators = [
-            serializers.UniqueTogetherValidator(queryset=Link.objects.all(),
-                                                          fields=['user', 'base', 'translation'])
-        ]
+        # validators = [
+        #     serializers.UniqueTogetherValidator(queryset=Link.objects.all(),
+        #                                                   fields=['user', 'base', 'translation'])
+        # ]
 
     def validate(self, attrs):
         if Link.objects.filter(user=attrs['user'],

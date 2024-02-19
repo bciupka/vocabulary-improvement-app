@@ -12,9 +12,10 @@ from rest_framework import status
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
 
-class LanguageViewSet(viewsets.ViewSet):
+class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Language.objects.all()
-    lookup_field = 'symbol'
+    serializer_class = LanguageSerializer
+    lookup_field = 'symbol__iexact'
 
 
 class WordViewSet(viewsets.ViewSet):
@@ -29,14 +30,15 @@ class WordViewSet(viewsets.ViewSet):
     @extend_schema(responses=WordSerializer)
     @action(['GET'], False, url_path=r'getlang/(?P<lang>\w+)/(?P<word>\w+)')
     def get_by_lang(self, request, lang, word):
-        serialzier = WordSerializer(self.queryset.filter(language__symbol=lang, word=word).select_related('language'),
-                                    many=True)
+        serialzier = WordSerializer(self.queryset.filter(language__symbol__iexact=lang,
+                                                         word__iexact=word).select_related('language'), many=True)
         return Response(serialzier.data)
 
     @extend_schema(responses=WordSerializer)
     @action(['GET'], False, url_path=r'listlang/(?P<lang>\w+)')
     def list_by_lang(self, request, lang):
-        serialzier = WordSerializer(self.queryset.filter(language__symbol=lang).select_related('language'), many=True)
+        serialzier = WordSerializer(self.queryset.filter(language__symbol__iexact=lang).select_related('language'),
+                                    many=True)
         return Response(serialzier.data)
 
     @extend_schema(responses=WordSerializer, request=WordSerializer)

@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.core.validators import RegexValidator
+from django.db.models.functions import Lower
 
 
 class SelfValidatingModel(models.Model):
@@ -11,12 +12,6 @@ class SelfValidatingModel(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
-
-
-class WordManager(models.Manager):
-    def get_queryset(self):
-        self.word = self.word.islower()
-        return
 
 
 class Language(SelfValidatingModel):
