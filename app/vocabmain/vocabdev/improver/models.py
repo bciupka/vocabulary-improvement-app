@@ -2,7 +2,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.core.validators import RegexValidator
-from django.db.models.functions import Lower
+from django.db.models.functions import Lower, Random
+import random
 
 
 class SelfValidatingModel(models.Model):
@@ -46,6 +47,7 @@ class Link(SelfValidatingModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     base = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='base')
     translation = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='transation')
+    random_nr = models.DecimalField(max_digits=4, decimal_places=3, default=Random(), null=True, blank=True)
 
     class Meta:
         constraints = [

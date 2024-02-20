@@ -1,7 +1,8 @@
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import LanguageSerializer, WordSerializer, LinkSerializer
+from .serializers import LanguageSerializer, WordSerializer, LinkSerializer, PaginationGetLinkSerializer
 from .models import Language, Word, Link
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
@@ -10,6 +11,13 @@ from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from drf_spectacular.utils import OpenApiParameter
+from django.db.models.functions import Random
+
+
+class LinkPagination(PageNumberPagination):
+    page_size = 3
+    max_page_size = 50
 
 
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
@@ -54,10 +62,26 @@ class WordViewSet(viewsets.ViewSet):
 class LinkViewSet(viewsets.ViewSet):
     queryset = Link.objects.all()
     permission_classes = (IsAuthenticated,)
+    pagination_class = LinkPagination
+    paginator = pagination_class()
 
-    @extend_schema(responses=LinkSerializer)
+
+    @extend_schema(responses=PaginationGetLinkSerializer, parameters=[
+        OpenApiParameter(name='amount', required=False, type=int),
+        OpenApiParameter(name='lang1', required=True, type=str),
+        OpenApiParameter(name='lang2', required=True, type=str)])
     def list(self, request):
-        serializer = LinkSerializer(self.queryset, many=True)
+        amount = int(request.query_params.get('amount', 100))
+        lang1 = request.query_params.get('lang1')
+        lang2 = request.query_params.get('lang2')
+        if not request.query_params.get('page'):
+            self.queryset.filter(user=request.user).update(random_nr=Random())
+        random_queryset = self.queryset.filter(user=request.user, base__language__symbol=lang1,
+                                               translation__language__symbol=lang2).order_by('random_nr')[:amount]
+        serializer = PaginationGetLinkSerializer(random_queryset, many=True)
+        page = self.paginator.paginate_queryset(queryset=serializer.data, request=request)
+        if page:
+            return self.paginator.get_paginated_response(page)
         return Response(serializer.data)
 
     @extend_schema(responses=LinkSerializer, request=LinkSerializer)

@@ -29,11 +29,7 @@ class LinkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Link
-        fields = '__all__'
-        # validators = [
-        #     serializers.UniqueTogetherValidator(queryset=Link.objects.all(),
-        #                                                   fields=['user', 'base', 'translation'])
-        # ]
+        exclude = ('random_nr',)
 
     def validate(self, attrs):
         if Link.objects.filter(user=attrs['user'],
@@ -51,6 +47,18 @@ class LinkSerializer(serializers.ModelSerializer):
         link = Link.objects.create(base=base, translation=translation, user=validated_data['user'])
         return link
 
+
+class PaginationGetLinkSerializer(serializers.ModelSerializer):
+    base = serializers.CharField(source='base.word')
+    translations = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Link
+        fields = ['base', 'translations']
+
+    def get_translations(self, obj):
+        return (Link.objects.filter(base=obj.base, translation__language=obj.translation.language)
+                .values_list('translation__word', flat=True))
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
