@@ -47,7 +47,7 @@ class Link(SelfValidatingModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     base = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='base')
     translation = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='transation')
-    random_nr = models.DecimalField(max_digits=4, decimal_places=3, default=Random(), null=True, blank=True)
+    random_nr = models.DecimalField(max_digits=4, decimal_places=3, default=0.001, null=True, blank=True)
 
     class Meta:
         constraints = [

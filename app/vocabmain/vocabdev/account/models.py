@@ -9,10 +9,6 @@ from django.core.exceptions import ValidationError
 class ImpUserManager(BaseUserManager):
 
     def create_user(self, username, email, password, **additional_fields):
-
-        if not email or not username:
-            raise ValueError(_('Provide username and email'))
-
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **additional_fields)
         user.set_password(password)
@@ -20,7 +16,6 @@ class ImpUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, email, password, **additional_fields):
-
         additional_fields.setdefault('is_staff', True)
         additional_fields.setdefault('is_active', True)
         additional_fields.setdefault('is_superuser', True)
