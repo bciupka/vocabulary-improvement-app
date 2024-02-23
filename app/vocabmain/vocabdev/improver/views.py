@@ -84,6 +84,20 @@ class LinkViewSet(viewsets.ViewSet):
             return self.paginator.get_paginated_response(page)
         return Response(serializer.data)
 
+    @extend_schema(responses=PaginationGetLinkSerializer, parameters=[
+        OpenApiParameter(name='amount', required=False, type=int),
+        OpenApiParameter(name='lang1', required=True, type=str),
+        OpenApiParameter(name='lang2', required=True, type=str)])
+    @action(['GET',], detail=False, url_path="random_list")
+    def single_random_list(self, request):
+        amount = int(request.query_params.get('amount', 100))
+        lang1 = request.query_params.get('lang1')
+        lang2 = request.query_params.get('lang2')
+        serializer = PaginationGetLinkSerializer(
+            self.queryset.filter(base__language__symbol=lang1, translation__language__symbol=lang2)
+            .order_by('?')[:amount], many=True)
+        return Response(serializer.data)
+
     @extend_schema(responses=LinkSerializer, request=LinkSerializer)
     def create(self, request):
         serializer = LinkSerializer(data=request.data, context={'request': request})
