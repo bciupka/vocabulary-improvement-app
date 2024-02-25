@@ -1,7 +1,9 @@
 import pytest
 from vocabdev.account.models import ImpUser
 
+
 pytestmark = pytest.mark.django_db
+
 
 class TestImpUserModel:
     def test_str_method(self, imp_user_factory):

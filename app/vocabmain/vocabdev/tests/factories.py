@@ -31,7 +31,7 @@ class WordFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Word
 
-    word = factory.Sequence(lambda x: f'word_{x}')
+    word = factory.Sequence(lambda x: f"word-{x*'t'}")
     language = factory.SubFactory(LanguageFactory)
 
 
@@ -43,4 +43,4 @@ class LinkFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(ImpUserFactory)
     base = factory.SubFactory(WordFactory)
     translation = factory.SubFactory(WordFactory)
-    random_nr = 0.3
+    random_nr = 0

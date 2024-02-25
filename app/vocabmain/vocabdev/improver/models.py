@@ -25,7 +25,7 @@ class Language(SelfValidatingModel):
 
 
 class Word(SelfValidatingModel):
-    WordValidator = RegexValidator(r'^[a-zA-Z]*$','Only letters allowed')
+    WordValidator = RegexValidator(r'^[a-zA-Z-]*$','Only letters allowed')
 
     word = models.CharField(max_length=255, validators=[WordValidator])
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
