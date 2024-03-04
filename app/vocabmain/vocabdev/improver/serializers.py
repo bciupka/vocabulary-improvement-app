@@ -1,7 +1,7 @@
 from .models import Language, Word, Link
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
-
+from drf_spectacular.utils import extend_schema_field
 
 class WordSerializer(serializers.ModelSerializer):
     language = serializers.SlugRelatedField(queryset=Language.objects.all(), slug_field='symbol')
@@ -56,9 +56,11 @@ class PaginationGetLinkSerializer(serializers.ModelSerializer):
         model = Link
         fields = ['base', 'translations']
 
+    @extend_schema_field(serializers.ListField(child=serializers.CharField()))
     def get_translations(self, obj):
         return (Link.objects.filter(base=obj.base, translation__language=obj.translation.language)
                 .values_list('translation__word', flat=True))
+
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:

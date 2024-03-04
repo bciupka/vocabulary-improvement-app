@@ -8,10 +8,9 @@ from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from rest_framework import status
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
-from drf_spectacular.utils import OpenApiParameter
 from django.db.models.functions import Random
 
 

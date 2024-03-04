@@ -23,7 +23,7 @@ class LanguageFactory(factory.django.DjangoModelFactory):
 
     language_pol = factory.Sequence(lambda x: f'jezyk_{x}')
     language_eng = factory.Sequence(lambda x: f'lang_{x}')
-    symbol = factory.Sequence(lambda x: f'lg{x}')
+    symbol = factory.Sequence(lambda x: f'{x}tst'[:3])
 
 
 class WordFactory(factory.django.DjangoModelFactory):
